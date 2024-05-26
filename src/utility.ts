@@ -1,26 +1,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import {Uri, window, workspace, WorkspaceFolder} from "coc.nvim";
+import {Uri, workspace} from "coc.nvim";
 import {INodeData} from "./java/nodeData";
 import {languageServerApiManager} from "./languageServerApi/languageServerApiManager";
 
 export class Utility {
-
-    public static getDefaultWorkspaceFolder(): WorkspaceFolder | undefined {
-        if (workspace.workspaceFolders === undefined) {
-            return undefined;
-        }
-        if (workspace.workspaceFolders.length === 1) {
-            return workspace.workspaceFolders[0];
-        }
-        if (window.activeTextEditor) {
-            const activeWorkspaceFolder: WorkspaceFolder | undefined =
-                workspace.getWorkspaceFolder(window.activeTextEditor.document.uri);
-            return activeWorkspaceFolder;
-        }
-        return undefined;
-    }
 
     public static async isRevealable(uri: Uri): Promise<boolean> {
         if (!SUPPORTED_URI_SCHEMES.includes(uri.scheme)) {

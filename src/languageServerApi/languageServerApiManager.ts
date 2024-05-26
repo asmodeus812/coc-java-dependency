@@ -6,7 +6,7 @@ import {Commands} from "../commands";
 import {Settings} from "../settings";
 import {syncHandler} from "../syncHandler";
 import {LanguageServerMode} from "./LanguageServerMode";
-import { getJavaExtension } from 'coc-java-dependency/src/utils/Client'
+import {getJavaExtension, getJavaExtensionApi} from 'coc-java-dependency/src/utils/Client'
 
 class LanguageServerApiManager {
     private extensionApi: any;
@@ -43,11 +43,10 @@ class LanguageServerApiManager {
 
         const extension: Extension<any> | undefined = getJavaExtension()
         if (extension) {
-            await extension.activate();
-            const extensionApi: any = extension.exports;
+            const extensionApi: any = await getJavaExtensionApi()
             if (!extensionApi) {
-                window.showErrorMessage("Please update coc-java to the latest version.");
-                return;
+                window.showErrorMessage("Please update coc-java extension to latest version");
+                return
             }
 
             this.extensionApi = extensionApi;
@@ -86,6 +85,8 @@ class LanguageServerApiManager {
                     }));
                 }
             }
+        } else {
+            window.showErrorMessage("Please install the coc-java extension first");
         }
     }
 
