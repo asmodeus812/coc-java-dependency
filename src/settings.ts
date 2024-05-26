@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import {
-    commands, ConfigurationChangeEvent, ConfigurationTarget, ExtensionContext,
+    commands, ConfigurationChangeEvent, ExtensionContext,
     workspace,
 } from "coc.nvim";
 import {Commands} from "./commands";
@@ -45,7 +45,7 @@ export class Settings {
     }
 
     public static showMembers(): boolean {
-        return workspace.getConfiguration("java.dependency").get("showMembers", true);
+        return workspace.getConfiguration("java.dependency").get("showMembers", false);
     }
 
     public static autoRefresh(): boolean {

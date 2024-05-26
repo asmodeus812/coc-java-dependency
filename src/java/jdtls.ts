@@ -3,7 +3,7 @@
 
 import * as minimatch from "minimatch";
 import {Uri, commands, workspace} from "coc.nvim";
-import {Commands, executeJavaLanguageServerCommand} from "../commands";
+import {Commands} from "../commands";
 import {INodeData, NodeKind} from "./nodeData";
 import {Settings} from "../settings";
 
@@ -73,10 +73,6 @@ export namespace Jdtls {
         Succeed = 1,
         Witherror = 2,
         Cancelled = 3,
-    }
-
-    export function resolveBuildFiles(): Promise<string[]> {
-        return <Promise<string[]>>executeJavaLanguageServerCommand(Commands.JAVA_RESOLVE_BUILD_FILES);
     }
 }
 

@@ -12,7 +12,7 @@ import { DataNode } from "./dataNode"
 import { DocumentSymbolNode } from "./documentSymbolNode"
 import { ExplorerNode } from "./explorerNode"
 import { ProjectNode } from "./projectNode"
-import { getJavaExtensionApi } from 'coc-java-dependency/src/utils/Client'
+import { getJavaExtensionApi } from '../utils/Client'
 
 export class PrimaryTypeNode extends DataNode {
 

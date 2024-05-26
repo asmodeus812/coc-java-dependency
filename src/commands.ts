@@ -1,13 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
-import {commands} from "coc.nvim";
-/**
- * Commonly used commands
- */
+
 export namespace Commands {
-    /**
-     * Execute Workspace Command
-     */
     export const EXECUTE_WORKSPACE_COMMAND = "java.execute.workspaceCommand";
 
     export const VIEW_PACKAGE_CHANGETOFLATPACKAGEVIEW = "java.view.package.changeToFlatPackageView";
@@ -130,11 +124,6 @@ export namespace Commands {
 
     export const JAVA_PROJECT_CHECK_IMPORT_STATUS = "java.project.checkImportStatus";
 
-    /**
-     * Commands from Visual Studio Code
-     */
-    export const VSCODE_OPEN_FOLDER = "vscode.openFolder";
-
     export const VSCODE_OPEN = "vscode.open";
 
     export const WORKBENCH_ACTION_FILES_OPENFOLDER = "workbench.action.files.openFolder";
@@ -143,9 +132,6 @@ export namespace Commands {
 
     export const WORKBENCH_VIEW_PROBLEMS = "workbench.actions.view.problems";
 
-    /**
-     * Commands from JLS
-     */
     export const LIST_SOURCEPATHS = "java.project.listSourcePaths";
 
     export const COMPILE_WORKSPACE = "java.workspace.compile";
@@ -154,17 +140,5 @@ export namespace Commands {
 
     export const BUILD_PROJECT = "java.project.build";
 
-    /**
-     * Get the project settings
-     */
     export const GET_PROJECT_SETTINGS = 'java.project.getSettings';
-}
-
-export function executeJavaLanguageServerCommand(...rest: any[]) {
-    return executeJavaExtensionCommand(Commands.EXECUTE_WORKSPACE_COMMAND, ...rest);
-}
-
-export async function executeJavaExtensionCommand(commandName: string, ...rest: any[]) {
-    // TODO: need to handle error and trace telemetry
-    return commands.executeCommand(commandName, ...rest);
 }

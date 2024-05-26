@@ -1,5 +1,5 @@
 {
-    "name": "coc-java-dependency",
+    "name": "coc-java-explorer",
     "description": "coc.nvim extension project manager for java",
     "version": "0.23.6",
     "author": "asmodeus812",
@@ -112,7 +112,7 @@
                 "java.dependency.showMembers": {
                     "type": "boolean",
                     "description": "Show class members in the project explorer view when a class is expanded",
-                    "default": true
+                    "default": false
                 },
                 "java.dependency.autoRefresh": {
                     "type": "boolean",

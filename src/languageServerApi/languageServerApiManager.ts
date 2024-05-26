@@ -6,7 +6,7 @@ import {Commands} from "../commands";
 import {Settings} from "../settings";
 import {syncHandler} from "../syncHandler";
 import {LanguageServerMode} from "./LanguageServerMode";
-import {getJavaExtension, getJavaExtensionApi} from 'coc-java-dependency/src/utils/Client'
+import {getJavaExtension, getJavaExtensionApi} from '../utils/Client'
 
 class LanguageServerApiManager {
     private extensionApi: any;

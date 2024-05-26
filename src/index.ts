@@ -1,17 +1,15 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as path from "path"
 import {
-    commands, Extension, ExtensionContext, extensions, Uri, window,
+    commands, Extension, ExtensionContext, extensions
 } from "coc.nvim"
-import {buildFiles} from "./constants"
 import {Settings} from "./settings"
 import {syncHandler} from "./syncHandler"
 import {languageServerApiManager} from "./languageServerApi/languageServerApiManager"
 import {DependencyExplorer} from "./views/dependencyExplorer"
-import {Commands} from "coc-java-dependency/src/commands"
-import {getJavaExtension} from 'coc-java-dependency/src/utils/Client'
+import {Commands} from "./commands"
+import {getJavaExtension} from './utils/Client'
 
 export async function activate(context: ExtensionContext): Promise<void> {
     await activateExtension(context)
