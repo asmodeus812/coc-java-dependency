@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import {commands, Event, Extension, ExtensionContext, extensions, Uri, window} from "coc.nvim";
+import {commands, Event, Extension, ExtensionContext, Uri, window} from "coc.nvim";
 import {Commands} from "../commands";
 import {Settings} from "../settings";
 import {syncHandler} from "../syncHandler";

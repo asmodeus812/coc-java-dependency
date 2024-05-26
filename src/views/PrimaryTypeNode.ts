@@ -16,7 +16,7 @@ import { getJavaExtensionApi } from '../utils/Client'
 
 export class PrimaryTypeNode extends DataNode {
 
-    public static K_TYPE_KIND = "TypeKind";
+    public static readonly K_TYPE_KIND = "TypeKind";
 
     constructor(nodeData: INodeData, parent: DataNode, protected _rootNode?: DataNode) {
         super(nodeData, parent)
@@ -50,7 +50,6 @@ export class PrimaryTypeNode extends DataNode {
         if (this.nodeData.children?.length) {
             for (const child of this.nodeData.children) {
                 const documentSymbol: DocumentSymbol = child as DocumentSymbol
-                // Do not show the package declaration
                 if (documentSymbol.kind === SymbolKind.Package) {
                     continue
                 }
@@ -72,17 +71,16 @@ export class PrimaryTypeNode extends DataNode {
         const extensionApi = await getJavaExtensionApi()
         if (extensionApi) {
             const params: DocumentSymbolParams = { textDocument: { uri: document.uri } }
-            const symbols = await extensionApi.getDocumentSymbols(params)
-            return symbols
+            return await extensionApi.getDocumentSymbols(params)
         }
         return []
     }
 
     protected get command(): Command {
         return {
-            title: "Open source file content",
-            command: Commands.VSCODE_OPEN,
-            arguments: [Uri.parse(this.uri || ""), { preserveFocus: true }],
+            title: "Open source file contents",
+            command: Commands.JAVA_PROJECT_EXPLORER_RESOURCE_OPEN,
+            arguments: [Uri.parse(this.uri ?? "") ],
         }
     }
 
@@ -110,10 +108,6 @@ export class PrimaryTypeNode extends DataNode {
         return contextValue
     }
 
-    /**
-     * @returns ProjectNode if the current node is under an unmanaged folder,
-     * otherwise undefined.
-     */
     private getUnmanagedFolderAncestor(): ProjectNode | undefined {
         let ancestor = this.getParent()
         while (ancestor && !(ancestor instanceof ProjectNode)) {

@@ -16,6 +16,8 @@ export namespace Commands {
 
     export const JAVA_PROJECT_EXPLORER_HIDE_NONJAVA_RESOURCES = "java.view.explorer.hideNonJavaResources";
 
+    export const JAVA_PROJECT_EXPLORER_RESOURCE_OPEN = "java.view.explorer.openResourceNode"
+
     export const VIEW_PACKAGE_REFRESH = "java.view.package.refresh";
 
     export const VIEW_PACKAGE_INTERNAL_REFRESH = "_java.view.package.internal.refresh";
@@ -113,8 +115,6 @@ export namespace Commands {
     export const JAVA_CLEAN_WORKSPACE = "java.clean.workspace";
 
     export const JAVA_PROJECT_CONFIGURATION_UPDATE = "java.projectConfiguration.update";
-
-    export const JAVA_RESOLVE_BUILD_FILES = "vscode.java.resolveBuildFiles";
 
     export const JAVA_PROJECT_LIST_SOURCE_PATHS = "java.project.listSourcePaths";
 

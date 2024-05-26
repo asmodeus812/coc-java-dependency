@@ -7,15 +7,15 @@ import {
     workspace, nvim, commands, Disposable, ExtensionContext, TextEditor, TreeView,
     Document, TreeViewExpansionEvent, TreeViewSelectionChangeEvent, TreeViewVisibilityChangeEvent, Uri, window,
 } from "coc.nvim"
-import {Commands} from "../commands"
-import {Jdtls} from "../java/jdtls"
-import {INodeData} from "../java/nodeData"
-import {Settings} from "../settings"
-import {EventCounter, Utility} from "../utility"
-import {DataNode} from "./dataNode"
-import {DependencyDataProvider} from "./dependencyDataProvider"
-import {ExplorerNode} from "./explorerNode"
-import {explorerNodeCache} from "./nodeCache/explorerNodeCache"
+import { Commands } from "../commands"
+import { Jdtls } from "../java/jdtls"
+import { INodeData } from "../java/nodeData"
+import { Settings } from "../settings"
+import { EventCounter, Utility } from "../utility"
+import { DataNode } from "./dataNode"
+import { DependencyDataProvider } from "./dependencyDataProvider"
+import { ExplorerNode } from "./explorerNode"
+import { explorerNodeCache } from "./nodeCache/explorerNodeCache"
 
 export class DependencyExplorer implements Disposable {
 
@@ -34,10 +34,12 @@ export class DependencyExplorer implements Disposable {
 
     private _revealLock: AwaitLock
 
+    private _auxWinId: number
+
     constructor(public readonly context: ExtensionContext) {
         this._dataProvider = new DependencyDataProvider(context)
         this._dependencyViewer = window.createTreeView(
-            "Java project explorer",
+            "PROJECT EXPLORER",
             {
                 bufhidden: 'hide',
                 treeDataProvider: this._dataProvider
@@ -70,7 +72,7 @@ export class DependencyExplorer implements Disposable {
                 if (result) {
                     this.reveal(Uri.parse(result.uri), false)
                 } else {
-                    window.showErrorMessage("Unable to resolve the currently active document");
+                    window.showErrorMessage("Unable to resolve the currently active document")
                 }
             }),
             commands.registerCommand(Commands.JAVA_PROJECT_EXPLORER_SHOW_NONJAVA_RESOURCES, () => {
@@ -79,6 +81,10 @@ export class DependencyExplorer implements Disposable {
             commands.registerCommand(Commands.JAVA_PROJECT_EXPLORER_HIDE_NONJAVA_RESOURCES, () => {
                 Settings.switchNonJavaResourceFilter(false)
             }),
+            commands.registerCommand(Commands.JAVA_PROJECT_EXPLORER_RESOURCE_OPEN, async (uri: string, openCommand?: string) => {
+                await nvim.call('win_gotoid', [this._auxWinId])
+                await workspace.jumpTo(uri, null, openCommand)
+            })
         )
 
         context.subscriptions.push(
@@ -128,15 +134,22 @@ export class DependencyExplorer implements Disposable {
                 const tabnr = await nvim.call('tabpagenr') as number
                 const buflist = await nvim.call('tabpagebuflist', [tabnr]) as number[]
                 const bufId = await nvim.call('winbufnr', [winId])
-                const found = buflist.find((bufnr) => {return bufId == bufnr})
+                const found = buflist.find((bufnr) => { return bufId == bufnr })
                 if (!found) {
                     await nvim.call('coc#window#close', [winId])
+                    this._auxWinId = await nvim.call("win_getid") as number
                     await this._dependencyViewer?.show('botright 40vs')
                 }
             } else if (!this._dependencyViewer?.visible) {
+                this._auxWinId = await nvim.call("win_getid") as number
+                const viewId = await nvim.eval(`get(w:,'cocViewId', v:null)`) as string
+                // let winid = await nvim.call('coc#window#find', ['cocViewId', 'PROJECT EXPLORER']) as number
+                if (viewId) {
+                    await nvim.command(`let w:cocViewId = ''`)
+                }
                 await this._dependencyViewer?.show('botright 40vs')
             }
-            await this._dependencyViewer.reveal(node, {select: true, focus: true, expand: true})
+            await this._dependencyViewer.reveal(node, { select: true, focus: true, expand: true })
         } finally {
             this._revealLock.release()
         }
