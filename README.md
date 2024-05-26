@@ -14,16 +14,6 @@ A lightweight extension to provide additional Java project explorer features. It
 
 ![project-view](https://raw.githubusercontent.com/Microsoft/vscode-java-dependency/main/images/project-explorer.png)
 
-### Create Java Projects
-
-![create project](https://raw.githubusercontent.com/Microsoft/vscode-java-dependency/main/images/create-project.png)
-
-### Export Jar
-
-> Note: For Spring Boot projects, please use the build tool to build the executable jar, for example: `mvn package`.
-
-![export jar](https://raw.githubusercontent.com/Microsoft/vscode-java-dependency/main/images/export-jar.png)
-
 ### Manage Dependencies
 
 You can work with JAR files directly without any build tools. Go to `JAVA PROJECTS` view, find the `Referenced Libraries` node and click the `+` icon:
@@ -58,33 +48,32 @@ You can tell that the glob pattern is supported. And here's more - you can inclu
 
 ## Requirements
 
-- VS Code (version 1.83.1+)
-- [Language Support for Java by Red Hat](https://marketplace.visualstudio.com/items?itemName=redhat.java)
+-   VS Code (version 1.83.1+)
+-   [Language Support for Java by Red Hat](https://marketplace.visualstudio.com/items?itemName=redhat.java)
 
 ## Settings
 
 | Setting Name                                 | Description                                                                                                                             | Default Value                                       |
 | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
 | `java.dependency.showMembers`                | Specify whether to show the members in the Java Projects explorer.                                                                      | `false`                                             |
-| `java.dependency.syncWithFolderExplorer`     | Specify whether to link Java Projects Explorer with the active editor.                                                                  | `true`                                              |
 | `java.dependency.autoRefresh`                | Specify whether to automatically sync the change from editor to the Java Projects explorer.                                             | `true`                                              |
 | `java.dependency.refreshDelay`               | The delay time (ms) the auto refresh is invoked when changes are detected.                                                              | `2000ms`                                            |
 | `java.dependency.packagePresentation`        | Specify how to display the package. Supported values are: `flat`, `hierarchical`.                                                       | `flat`                                              |
-| `java.project.exportJar.targetPath`          | The output path of export jar. When this setting is **empty** , a file explorer will pop up to let the user select the output location. | `${workspaceFolder}/${workspaceFolderBasename}.jar` |
 | `java.project.explorer.showNonJavaResources` | When enabled, the explorer shows non-Java resources.                                                                                    | `true`                                              |
 
 ## Contribution
 
 ### Build
 
-- Prerequirement
+-   Prerequirement
 
-  - Node.js
-  - Java SDK 11 or above
+  -   Node.js
+  -   Java SDK 11 or above
 
-- Go to root folder:
+-   Go to root folder:
 
 ```
 npm install
 npm run build-server
 ```
+
