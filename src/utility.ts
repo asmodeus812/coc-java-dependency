@@ -1,10 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { Uri, window, workspace, WorkspaceFolder } from "vscode";
-import { setUserError } from "vscode-extension-telemetry-wrapper";
-import { INodeData } from "./java/nodeData";
-import { languageServerApiManager } from "./languageServerApi/languageServerApiManager";
+import {Uri, window, workspace, WorkspaceFolder} from "coc.nvim";
+import {INodeData} from "./java/nodeData";
+import {languageServerApiManager} from "./languageServerApi/languageServerApiManager";
 
 export class Utility {
 
@@ -50,7 +49,6 @@ export class UserError extends Error {
     constructor(context: ITroubleshootingMessage) {
         super(context.message);
         this.context = context;
-        setUserError(this);
     }
 }
 

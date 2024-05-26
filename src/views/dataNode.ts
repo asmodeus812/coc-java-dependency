@@ -2,10 +2,10 @@
 // Licensed under the MIT license.
 
 import * as _ from "lodash";
-import { ThemeIcon, TreeItem, TreeItemCollapsibleState, Uri } from "vscode";
-import { INodeData, NodeKind } from "../java/nodeData";
-import { explorerLock } from "../utils/Lock";
-import { ExplorerNode } from "./explorerNode";
+import {TreeItem, TreeItemCollapsibleState, Uri} from "coc.nvim";
+import {INodeData, NodeKind} from "../java/nodeData";
+import {explorerLock} from "../utils/Lock";
+import {ExplorerNode} from "./explorerNode";
 
 export abstract class DataNode extends ExplorerNode {
 
@@ -17,13 +17,10 @@ export abstract class DataNode extends ExplorerNode {
 
     public getTreeItem(): TreeItem | Promise<TreeItem> {
         const item = new TreeItem(
-            this._nodeData.displayName || this._nodeData.name,
+            this._nodeData.displayName ?? this._nodeData.name,
             this.hasChildren() ? TreeItemCollapsibleState.Collapsed : TreeItemCollapsibleState.None,
         );
-        item.description = this.description;
-        item.iconPath = this.iconPath;
         item.command = this.command;
-        item.contextValue = this.computeContextValue();
         if (this.uri) {
             switch (this._nodeData.kind) {
                 case NodeKind.Project:
@@ -124,8 +121,6 @@ export abstract class DataNode extends ExplorerNode {
     protected get contextValue(): string | undefined {
         return undefined;
     }
-
-    protected abstract get iconPath(): string | Uri | { light: string | Uri; dark: string | Uri } | ThemeIcon;
 
     protected abstract loadData(): Promise<any[] | undefined>;
 

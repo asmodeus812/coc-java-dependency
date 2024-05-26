@@ -3,19 +3,15 @@
 
 import * as path from "path";
 import * as fse from "fs-extra";
-import { commands, Disposable, FileSystemWatcher, RelativePattern, Uri, workspace } from "vscode";
-import { instrumentOperation } from "vscode-extension-telemetry-wrapper";
-import { Commands } from "./commands";
-import { NodeKind } from "./java/nodeData";
-import { languageServerApiManager } from "./languageServerApi/languageServerApiManager";
-import { Settings } from "./settings";
-import { DataNode } from "./views/dataNode";
-import { ExplorerNode } from "./views/explorerNode";
-import { explorerNodeCache } from "./views/nodeCache/explorerNodeCache";
-import { Jdtls } from "./java/jdtls";
-
-const ENABLE_AUTO_REFRESH: string = "java.view.package.enableAutoRefresh";
-const DISABLE_AUTO_REFRESH: string = "java.view.package.disableAutoRefresh";
+import {commands, Disposable, FileSystemWatcher, RelativePattern, Uri, workspace} from "coc.nvim";
+import {Commands} from "./commands";
+import {NodeKind} from "./java/nodeData";
+import {languageServerApiManager} from "./languageServerApi/languageServerApiManager";
+import {Settings} from "./settings";
+import {DataNode} from "./views/dataNode";
+import {ExplorerNode} from "./views/explorerNode";
+import {explorerNodeCache} from "./views/nodeCache/explorerNodeCache";
+import {Jdtls} from "./java/jdtls";
 
 class SyncHandler implements Disposable {
 
@@ -24,9 +20,9 @@ class SyncHandler implements Disposable {
     public updateFileWatcher(autoRefresh?: boolean): void {
         this.dispose();
         if (autoRefresh) {
-            instrumentOperation(ENABLE_AUTO_REFRESH, () => this.enableAutoRefresh())();
+            this.enableAutoRefresh()
         } else {
-            instrumentOperation(DISABLE_AUTO_REFRESH, () => {})();
+            // nothing to do ?
         }
     }
 
@@ -122,7 +118,7 @@ class SyncHandler implements Disposable {
         } else {
             // in flat view
             if (path.extname(uri.fsPath) === ".java" && node.uri &&
-                    Uri.parse(node.uri).fsPath === path.dirname(uri.fsPath)) {
+                Uri.parse(node.uri).fsPath === path.dirname(uri.fsPath)) {
                 // if the returned node is direct parent of the input uri, refresh it.
                 return node;
             } else {
@@ -140,18 +136,5 @@ class SyncHandler implements Disposable {
         commands.executeCommand(Commands.VIEW_PACKAGE_INTERNAL_REFRESH, /* debounce = */true, node);
     }
 }
-
-// interface ISourcePath {
-//     path: string;
-//     displayPath: string;
-//     projectName: string;
-//     projectType: string;
-// }
-
-// interface IListCommandResult {
-//     status: boolean;
-//     message: string;
-//     data?: ISourcePath[];
-// }
 
 export const syncHandler: SyncHandler = new SyncHandler();

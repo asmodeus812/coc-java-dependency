@@ -7,7 +7,7 @@ const path = require('path');
 
 const server_dir = path.resolve('jdtls.ext');
 
-cp.execSync(mvnw()+ ' clean package', {cwd:server_dir, stdio:[0,1,2]} );
+cp.execSync(mvnw() + ' clean package', {cwd: server_dir, stdio: [0, 1, 2]});
 copy(path.join(server_dir, 'com.microsoft.jdtls.ext.core/target'), path.resolve('server'), (file) => {
     return /^com.microsoft.jdtls.ext.core.*.jar$/.test(file);
 });
@@ -25,5 +25,5 @@ function isWin() {
 }
 
 function mvnw() {
-    return isWin()?"mvnw.cmd":"./mvnw";
+    return isWin() ? "mvnw.cmd" : "./mvnw";
 }

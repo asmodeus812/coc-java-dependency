@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { sendError } from "vscode-extension-telemetry-wrapper";
 import { INodeData, NodeKind } from "../java/nodeData";
 import { Settings } from "../settings";
 import { PrimaryTypeNode } from "./PrimaryTypeNode";
@@ -85,7 +84,6 @@ export class NodeFactory {
                     throw new Error(`Unsupported node kind: ${nodeData.kind}`);
             }
         } catch (error) {
-            sendError(new Error(`Unsupported node kind: ${nodeData.kind}`));
             return undefined;
         }
 

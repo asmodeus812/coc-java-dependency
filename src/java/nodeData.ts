@@ -32,5 +32,5 @@ export interface INodeData {
     uri?: string;
     kind: NodeKind;
     children?: any[];
-    metaData?: { [id: string]: any };
+    metaData?: {[id: string]: any};
 }

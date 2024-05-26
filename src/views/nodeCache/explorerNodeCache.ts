@@ -2,10 +2,10 @@
 // Licensed under the MIT license.
 
 import * as path from "path";
-import { Uri } from "vscode";
-import { DataNode } from "../dataNode";
-import { ExplorerNode } from "../explorerNode";
-import { Trie, TrieNode } from "./Trie";
+import {Uri} from "coc.nvim";
+import {DataNode} from "../dataNode";
+import {ExplorerNode} from "../explorerNode";
+import {Trie, TrieNode} from "./Trie";
 
 class ExplorerNodeCache {
 

@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import * as path from "path";
-import { Uri } from "vscode";
+import {Uri} from "coc.nvim";
 
 export class Trie<T extends IUriData> {
     private _root: TrieNode<T | undefined>;

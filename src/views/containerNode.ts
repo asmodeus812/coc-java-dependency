@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { ThemeIcon, Uri } from "vscode";
+import { Uri } from "coc.nvim";
 import { Explorer } from "../constants";
 import { Jdtls } from "../java/jdtls";
 import { INodeData, NodeKind } from "../java/nodeData";
@@ -11,6 +11,7 @@ import { NodeFactory } from "./nodeFactory";
 import { ProjectNode } from "./projectNode";
 
 export class ContainerNode extends DataNode {
+
     constructor(nodeData: INodeData, parent: DataNode, private readonly _project: ProjectNode) {
         super(nodeData, parent);
     }
@@ -40,7 +41,7 @@ export class ContainerNode extends DataNode {
 
     protected createChildNodeList(): ExplorerNode[] {
         const result: (ExplorerNode | undefined)[] = [];
-        if (this.nodeData.children && this.nodeData.children.length) {
+        if (this.nodeData?.children?.length) {
             this.nodeData.children.forEach((nodeData) => {
                 result.push(NodeFactory.createNode(nodeData, this, this._project));
             });
@@ -55,10 +56,6 @@ export class ContainerNode extends DataNode {
             contextValue += `+${containerType}`;
         }
         return contextValue;
-    }
-
-    protected get iconPath(): ThemeIcon {
-        return new ThemeIcon("folder-library");
     }
 }
 

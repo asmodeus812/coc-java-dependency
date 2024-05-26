@@ -31,7 +31,7 @@ export class HierarchicalPackageRootNode extends PackageRootNode {
     protected createChildNodeList(): ExplorerNode[] {
         const result: (ExplorerNode | undefined)[] = [];
         const packageData: any[] = [];
-        if (this.nodeData.children && this.nodeData.children.length) {
+        if (this.nodeData?.children?.length) {
             this.nodeData.children.forEach((nodeData) => {
                 if (nodeData.kind === NodeKind.Package) {
                     // Invisible project may have an empty named package root (the linked folder),

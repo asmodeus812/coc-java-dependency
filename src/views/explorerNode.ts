@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { Command, ProviderResult, TreeItem } from "vscode";
+import {Command, ProviderResult, TreeItem} from "coc.nvim";
 
 export abstract class ExplorerNode {
 

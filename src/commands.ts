@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
-import { commands } from "vscode";
+import {commands} from "coc.nvim";
 /**
  * Commonly used commands
  */
@@ -18,9 +18,9 @@ export namespace Commands {
 
     export const VIEW_PACKAGE_UNLINKWITHFOLDER = "java.view.package.unlinkWithFolderExplorer";
 
-    export const JAVA_PROJECT_EXPLORER_SHOW_NONJAVA_RESOURCES = "java.project.explorer.showNonJavaResources";
+    export const JAVA_PROJECT_EXPLORER_SHOW_NONJAVA_RESOURCES = "java.view.explorer.showNonJavaResources";
 
-    export const JAVA_PROJECT_EXPLORER_HIDE_NONJAVA_RESOURCES = "java.project.explorer.hideNonJavaResources";
+    export const JAVA_PROJECT_EXPLORER_HIDE_NONJAVA_RESOURCES = "java.view.explorer.hideNonJavaResources";
 
     export const VIEW_PACKAGE_REFRESH = "java.view.package.refresh";
 
@@ -60,7 +60,7 @@ export namespace Commands {
 
     export const VIEW_PACKAGE_DELETE_FILE_PERMANENTLY = "java.view.package.deleteFilePermanently";
 
-    export const VIEW_PACKAGE_REVEAL_IN_PROJECT_EXPLORER = "java.view.package.revealInProjectExplorer";
+    export const VIEW_PACKAGE_REVEAL_IN_PROJECT_EXPLORER = "java.view.package.revealProject";
 
     export const VIEW_PACKAGE_NEW_FILE = "java.view.package.newFile";
 

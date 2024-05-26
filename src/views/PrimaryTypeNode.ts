@@ -1,17 +1,16 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { Command, commands, DocumentSymbol, SymbolInformation, SymbolKind, TextDocument, ThemeIcon, Uri, workspace } from "vscode";
-import { createUuid, sendOperationEnd, sendOperationStart } from "vscode-extension-telemetry-wrapper";
-import { Commands } from "../commands";
-import { Explorer } from "../constants";
-import { INodeData, TypeKind } from "../java/nodeData";
-import { Settings } from "../settings";
-import { isTest } from "../utility";
-import { DataNode } from "./dataNode";
-import { DocumentSymbolNode } from "./documentSymbolNode";
-import { ExplorerNode } from "./explorerNode";
-import { ProjectNode } from "./projectNode";
+import {Command, commands, DocumentSymbol, SymbolInformation, SymbolKind, TextDocument, Uri, workspace} from "coc.nvim";
+import {Commands} from "../commands";
+import {Explorer} from "../constants";
+import {INodeData, TypeKind} from "../java/nodeData";
+import {Settings} from "../settings";
+import {isTest} from "../utility";
+import {DataNode} from "./dataNode";
+import {DocumentSymbolNode} from "./documentSymbolNode";
+import {ExplorerNode} from "./explorerNode";
+import {ProjectNode} from "./projectNode";
 
 export class PrimaryTypeNode extends DataNode {
 
@@ -46,7 +45,7 @@ export class PrimaryTypeNode extends DataNode {
 
     protected createChildNodeList(): ExplorerNode[] {
         const result: ExplorerNode[] = [];
-        if (this.nodeData.children && this.nodeData.children.length) {
+        if (this.nodeData.children?.length) {
             for (const child of this.nodeData.children) {
                 const documentSymbol: DocumentSymbol = child as DocumentSymbol;
                 // Do not show the package declaration
@@ -54,7 +53,7 @@ export class PrimaryTypeNode extends DataNode {
                     continue;
                 }
                 if (documentSymbol.name === this.nodeData.name) {
-                    for (const childSymbol of documentSymbol.children) {
+                    for (const childSymbol of documentSymbol?.children ?? []) {
                         result.push(new DocumentSymbolNode(childSymbol, this));
                     }
                 }
@@ -63,45 +62,22 @@ export class PrimaryTypeNode extends DataNode {
         return result;
     }
 
-    protected get iconPath(): string | ThemeIcon {
-        switch (this.nodeData.metaData?.[PrimaryTypeNode.K_TYPE_KIND]) {
-            case TypeKind.Enum:
-                return new ThemeIcon("symbol-enum");
-            case TypeKind.Interface:
-                return new ThemeIcon("symbol-interface");
-            default:
-                return new ThemeIcon("symbol-class");
-        }
-    }
-
     protected hasChildren(): boolean {
         return Settings.showMembers();
     }
 
     private async getSymbols(document: TextDocument): Promise<SymbolInformation[] | DocumentSymbol[] | undefined> {
-        let error;
-        const operationId = createUuid();
-        const startAt: number = Date.now();
-        sendOperationStart(operationId, "vscode.executeDocumentSymbolProvider");
-        try {
-            return await commands.executeCommand<SymbolInformation[]>(
-                "vscode.executeDocumentSymbolProvider",
-                document.uri,
-            );
-        } catch (err) {
-            error = err;
-            throw err;
-        } finally {
-            const duration = Date.now() - startAt;
-            sendOperationEnd(operationId, "vscode.executeDocumentSymbolProvider", duration, error);
-        }
+        return await commands.executeCommand<SymbolInformation[]>(
+            "vscode.executeDocumentSymbolProvider",
+            document.uri,
+        );
     }
 
     protected get command(): Command {
         return {
             title: "Open source file content",
             command: Commands.VSCODE_OPEN,
-            arguments: [Uri.parse(this.uri || ""), { preserveFocus: true }],
+            arguments: [Uri.parse(this.uri || ""), {preserveFocus: true}],
         };
     }
 

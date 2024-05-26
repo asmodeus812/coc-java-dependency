@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { Command, DocumentSymbol, Range, SymbolKind, ThemeIcon, TreeItem, TreeItemCollapsibleState } from "vscode";
-import { Commands } from "../commands";
-import { Explorer } from "../constants";
-import { ExplorerNode } from "./explorerNode";
-import { PrimaryTypeNode } from "./PrimaryTypeNode";
+import {Command, DocumentSymbol, Range, SymbolKind, TreeItem, TreeItemCollapsibleState} from "coc.nvim";
+import {Commands} from "../commands";
+import {Explorer} from "../constants";
+import {ExplorerNode} from "./explorerNode";
+import {PrimaryTypeNode} from "./PrimaryTypeNode";
 
 export class DocumentSymbolNode extends ExplorerNode {
 
@@ -42,7 +42,6 @@ export class DocumentSymbolNode extends ExplorerNode {
         const item = new TreeItem(this.symbolInfo.name,
             this.symbolInfo?.children?.length ? TreeItemCollapsibleState.Collapsed
                 : TreeItemCollapsibleState.None);
-        item.iconPath = this.iconPath;
         item.command = this.command;
         return item;
     }
@@ -54,14 +53,6 @@ export class DocumentSymbolNode extends ExplorerNode {
 
     public computeContextValue(): string | undefined {
         return `java:${Explorer.ContextValueType.Symbol}`;
-    }
-
-    protected get iconPath(): ThemeIcon {
-        if (this._iconMap.has(this.symbolInfo.kind)) {
-            const symbolKind = this._iconMap.get(this.symbolInfo.kind);
-            return new ThemeIcon(`symbol-${symbolKind}`);
-        }
-        return new ThemeIcon("symbol-misc");
     }
 
     protected get command(): Command {

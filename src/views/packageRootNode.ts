@@ -1,18 +1,17 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { ThemeIcon } from "vscode";
-import { Explorer } from "../constants";
-import { Jdtls } from "../java/jdtls";
-import { INodeData, NodeKind } from "../java/nodeData";
-import { IPackageRootNodeData, PackageRootKind } from "../java/packageRootNodeData";
-import { Settings } from "../settings";
-import { isTest } from "../utility";
-import { ContainerNode } from "./containerNode";
-import { DataNode } from "./dataNode";
-import { ExplorerNode } from "./explorerNode";
-import { ProjectNode } from "./projectNode";
-import { NodeFactory } from "./nodeFactory";
+import {Explorer} from "../constants";
+import {Jdtls} from "../java/jdtls";
+import {INodeData, NodeKind} from "../java/nodeData";
+import {IPackageRootNodeData, PackageRootKind} from "../java/packageRootNodeData";
+import {Settings} from "../settings";
+import {isTest} from "../utility";
+import {ContainerNode} from "./containerNode";
+import {DataNode} from "./dataNode";
+import {ExplorerNode} from "./explorerNode";
+import {ProjectNode} from "./projectNode";
+import {NodeFactory} from "./nodeFactory";
 
 export class PackageRootNode extends DataNode {
 
@@ -36,7 +35,7 @@ export class PackageRootNode extends DataNode {
 
     protected createChildNodeList(): ExplorerNode[] {
         const result: (ExplorerNode | undefined)[] = [];
-        if (this.nodeData.children && this.nodeData.children.length) {
+        if (this.nodeData?.children?.length) {
             this.nodeData.children.forEach((nodeData) => {
                 result.push(NodeFactory.createNode(nodeData, this, this._project, this));
             });
@@ -82,15 +81,6 @@ export class PackageRootNode extends DataNode {
             }
             return contextValue;
         }
-    }
-
-    protected get iconPath(): ThemeIcon {
-        const data = <IPackageRootNodeData>this.nodeData;
-        if (data.moduleName || data.entryKind === PackageRootKind.K_SOURCE) {
-            return new ThemeIcon("file-submodule");
-        }
-        // K_BINARY node
-        return new ThemeIcon("file-zip");
     }
 }
 

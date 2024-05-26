@@ -1,16 +1,16 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { ThemeIcon, Uri, workspace } from "vscode";
-import { Explorer } from "../constants";
-import { HierarchicalPackageNodeData } from "../java/hierarchicalPackageNodeData";
-import { Jdtls } from "../java/jdtls";
-import { INodeData, NodeKind } from "../java/nodeData";
-import { Settings } from "../settings";
-import { DataNode } from "./dataNode";
-import { ExplorerNode } from "./explorerNode";
-import { HierarchicalPackageNode } from "./hierarchicalPackageNode";
-import { NodeFactory } from "./nodeFactory";
+import {Uri, workspace} from "coc.nvim";
+import {Explorer} from "../constants";
+import {HierarchicalPackageNodeData} from "../java/hierarchicalPackageNodeData";
+import {Jdtls} from "../java/jdtls";
+import {INodeData, NodeKind} from "../java/nodeData";
+import {Settings} from "../settings";
+import {DataNode} from "./dataNode";
+import {ExplorerNode} from "./explorerNode";
+import {HierarchicalPackageNode} from "./hierarchicalPackageNode";
+import {NodeFactory} from "./nodeFactory";
 
 export class ProjectNode extends DataNode {
 
@@ -48,14 +48,14 @@ export class ProjectNode extends DataNode {
         const natureIds: string[] = this.nodeData.metaData?.[NATURE_ID] || [];
         for (const natureId of natureIds) {
             if (natureId === NatureId.UnmanagedFolder) {
-                 return true;
+                return true;
             }
         }
         return false;
     }
 
     protected async loadData(): Promise<INodeData[]> {
-        return Jdtls.getPackageData({ kind: NodeKind.Project, projectUri: this.nodeData.uri });
+        return Jdtls.getPackageData({kind: NodeKind.Project, projectUri: this.nodeData.uri});
     }
 
     protected createChildNodeList(): ExplorerNode[] {
@@ -85,10 +85,6 @@ export class ProjectNode extends DataNode {
         return result.filter(<T>(n?: T): n is T => Boolean(n));
     }
 
-    protected get iconPath(): ThemeIcon {
-        return new ThemeIcon("project");
-    }
-
     protected get contextValue(): string {
         let contextValue: string = Explorer.ContextValueType.Project;
         const natureIds: string[] | undefined = this.nodeData.metaData?.[NATURE_ID];
@@ -103,7 +99,7 @@ export class ProjectNode extends DataNode {
     }
 }
 
-function getProjectTypeAttributes(natureIds: string []): string {
+function getProjectTypeAttributes(natureIds: string[]): string {
     let attributeString: string = "";
     for (const natureId of natureIds) {
         const readableNature: string = getProjectType(natureId);

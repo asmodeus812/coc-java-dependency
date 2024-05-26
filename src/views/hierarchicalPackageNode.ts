@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import * as _ from "lodash";
-import { TreeItem, TreeItemCollapsibleState } from "vscode";
+import { TreeItem, TreeItemCollapsibleState } from "coc.nvim";
 import { HierarchicalPackageNodeData } from "../java/hierarchicalPackageNodeData";
 import { INodeData } from "../java/nodeData";
 import { explorerLock } from "../utils/Lock";
@@ -65,7 +65,7 @@ export class HierarchicalPackageNode extends PackageNode {
 
     protected createChildNodeList(): ExplorerNode[] {
         const result: (ExplorerNode | undefined)[] = [];
-        if (this.nodeData.children && this.nodeData.children.length) {
+        if (this.nodeData?.children?.length) {
             this.nodeData.children.forEach((nodeData) => {
                 result.push(NodeFactory.createNode(nodeData, this, this._project, this._rootNode));
             });

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { commands, Disposable, ExtensionContext } from "vscode";
+import {commands, Disposable, ExtensionContext} from "coc.nvim";
 
 class ContextManager implements Disposable {
     private _context: ExtensionContext;
@@ -22,7 +22,7 @@ class ContextManager implements Disposable {
     }
 
     public getContextValue<T>(key: string): T | undefined {
-        return <T> this._contextValueMap.get(key);
+        return <T>this._contextValueMap.get(key);
     }
 
     public dispose(): void {
