@@ -45,7 +45,7 @@ export class Settings {
     }
 
     public static showMembers(): boolean {
-        return workspace.getConfiguration("java.dependency").get("showMembers", false);
+        return workspace.getConfiguration("java.dependency").get("showMembers", true);
     }
 
     public static autoRefresh(): boolean {

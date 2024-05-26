@@ -13,6 +13,7 @@ import { syncHandler } from "./syncHandler"
 import { languageServerApiManager } from "./languageServerApi/languageServerApiManager"
 import { DependencyExplorer } from "./views/dependencyExplorer"
 import { Commands } from "coc-java-dependency/src/commands"
+import { getJavaExtension } from 'coc-java-dependency/src/utils/Client'
 
 export async function activate(context: ExtensionContext): Promise<void> {
     await activateExtension(context)
@@ -52,12 +53,4 @@ function addExtensionChangeListener(context: ExtensionContext): void {
         })
         context.subscriptions.push(extensionChangeListener)
     }
-}
-
-function getJavaExtension(): Extension<any> | undefined {
-    const java = extensions.getExtensionById("coc-java")
-    if (!java || java == null || java === undefined) {
-        return extensions.getExtensionById("coc-java-dev")
-    }
-    return java
 }

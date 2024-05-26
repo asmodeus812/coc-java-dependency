@@ -1,108 +1,113 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import {Command, commands, DocumentSymbol, SymbolInformation, SymbolKind, TextDocument, Uri, workspace} from "coc.nvim";
-import {Commands} from "../commands";
-import {Explorer} from "../constants";
-import {INodeData, TypeKind} from "../java/nodeData";
-import {Settings} from "../settings";
-import {isTest} from "../utility";
-import {DataNode} from "./dataNode";
-import {DocumentSymbolNode} from "./documentSymbolNode";
-import {ExplorerNode} from "./explorerNode";
-import {ProjectNode} from "./projectNode";
+import { Command, DocumentSymbol, SymbolInformation, SymbolKind, TextDocument, Uri, workspace } from "coc.nvim"
+import { DocumentSymbolParams } from 'vscode-languageserver-protocol'
+import { Commands } from "../commands"
+import { Explorer } from "../constants"
+import { INodeData, TypeKind } from "../java/nodeData"
+import { Settings } from "../settings"
+import { isTest } from "../utility"
+import { DataNode } from "./dataNode"
+import { DocumentSymbolNode } from "./documentSymbolNode"
+import { ExplorerNode } from "./explorerNode"
+import { ProjectNode } from "./projectNode"
+import { getJavaExtensionApi } from 'coc-java-dependency/src/utils/Client'
 
 export class PrimaryTypeNode extends DataNode {
 
     public static K_TYPE_KIND = "TypeKind";
 
     constructor(nodeData: INodeData, parent: DataNode, protected _rootNode?: DataNode) {
-        super(nodeData, parent);
+        super(nodeData, parent)
     }
 
     public getPackageRootPath(): string {
         if (this._rootNode?.uri) {
-            return Uri.parse(this._rootNode.uri).fsPath;
+            return Uri.parse(this._rootNode.uri).fsPath
         }
 
-        const unmanagedFolder = this.getUnmanagedFolderAncestor();
+        const unmanagedFolder = this.getUnmanagedFolderAncestor()
         if (unmanagedFolder?.uri) {
-            return Uri.parse(unmanagedFolder.uri).fsPath;
+            return Uri.parse(unmanagedFolder.uri).fsPath
         }
 
-        return "";
+        return ""
     }
 
     protected async loadData(): Promise<SymbolInformation[] | DocumentSymbol[] | undefined> {
         if (!this.hasChildren() || !this.nodeData.uri) {
-            return undefined;
+            return undefined
         }
 
         return workspace.openTextDocument(Uri.parse(this.nodeData.uri)).then((doc) => {
-            return this.getSymbols(doc);
-        });
+            return this.getSymbols(doc.textDocument)
+        })
     }
 
     protected createChildNodeList(): ExplorerNode[] {
-        const result: ExplorerNode[] = [];
+        const result: ExplorerNode[] = []
         if (this.nodeData.children?.length) {
             for (const child of this.nodeData.children) {
-                const documentSymbol: DocumentSymbol = child as DocumentSymbol;
+                const documentSymbol: DocumentSymbol = child as DocumentSymbol
                 // Do not show the package declaration
                 if (documentSymbol.kind === SymbolKind.Package) {
-                    continue;
+                    continue
                 }
                 if (documentSymbol.name === this.nodeData.name) {
                     for (const childSymbol of documentSymbol?.children ?? []) {
-                        result.push(new DocumentSymbolNode(childSymbol, this));
+                        result.push(new DocumentSymbolNode(childSymbol, this))
                     }
                 }
             }
         }
-        return result;
+        return result
     }
 
     protected hasChildren(): boolean {
-        return Settings.showMembers();
+        return Settings.showMembers()
     }
 
     private async getSymbols(document: TextDocument): Promise<SymbolInformation[] | DocumentSymbol[] | undefined> {
-        return await commands.executeCommand<SymbolInformation[]>(
-            "vscode.executeDocumentSymbolProvider",
-            document.uri,
-        );
+        const extensionApi = await getJavaExtensionApi()
+        if (extensionApi) {
+            const params: DocumentSymbolParams = { textDocument: { uri: document.uri } }
+            const symbols = await extensionApi.getDocumentSymbols(params)
+            return symbols
+        }
+        return []
     }
 
     protected get command(): Command {
         return {
             title: "Open source file content",
             command: Commands.VSCODE_OPEN,
-            arguments: [Uri.parse(this.uri || ""), {preserveFocus: true}],
-        };
+            arguments: [Uri.parse(this.uri || ""), { preserveFocus: true }],
+        }
     }
 
     protected get contextValue(): string {
-        let contextValue: string = Explorer.ContextValueType.Type;
-        const type = this.nodeData.metaData?.[PrimaryTypeNode.K_TYPE_KIND];
+        let contextValue: string = Explorer.ContextValueType.Type
+        const type = this.nodeData.metaData?.[PrimaryTypeNode.K_TYPE_KIND]
 
         if (type === TypeKind.Enum) {
-            contextValue += "+enum";
+            contextValue += "+enum"
         } else if (type === TypeKind.Interface) {
-            contextValue += "+interface";
+            contextValue += "+interface"
         } else {
-            contextValue += "+class";
+            contextValue += "+class"
         }
 
         if (isTest(this._rootNode?.nodeData)) {
-            contextValue += "+test";
+            contextValue += "+test"
         }
 
         if (this._rootNode?.getParent() instanceof ProjectNode
             && (this._rootNode.getParent() as ProjectNode).nodeData?.metaData?.MaxSourceVersion >= 16) {
-            contextValue += "+allowRecord";
+            contextValue += "+allowRecord"
         }
 
-        return contextValue;
+        return contextValue
     }
 
     /**
@@ -110,14 +115,16 @@ export class PrimaryTypeNode extends DataNode {
      * otherwise undefined.
      */
     private getUnmanagedFolderAncestor(): ProjectNode | undefined {
-        let ancestor = this.getParent();
+        let ancestor = this.getParent()
         while (ancestor && !(ancestor instanceof ProjectNode)) {
-            ancestor = ancestor.getParent();
+            ancestor = ancestor.getParent()
         }
         if (ancestor?.isUnmanagedFolder()) {
-            return ancestor;
+            return ancestor
         }
 
-        return undefined;
+        return undefined
     }
+
+
 }

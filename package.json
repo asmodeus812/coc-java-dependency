@@ -112,7 +112,7 @@
                 "java.dependency.showMembers": {
                     "type": "boolean",
                     "description": "Show class members in the project explorer view when a class is expanded",
-                    "default": false
+                    "default": true
                 },
                 "java.dependency.autoRefresh": {
                     "type": "boolean",

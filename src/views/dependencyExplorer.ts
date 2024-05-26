@@ -2,13 +2,10 @@
 // Licensed under the MIT license.
 
 import AwaitLock from "await-lock"
-import * as fse from "fs-extra"
 import * as _ from "lodash"
-import * as path from "path"
 import {
-    commands, Disposable, ExtensionContext, QuickPickItem, TextEditor, TreeView,
-    TreeViewExpansionEvent, TreeViewSelectionChangeEvent, TreeViewVisibilityChangeEvent, Uri, window,
-    workspace,
+    nvim, commands, Disposable, ExtensionContext, QuickPickItem, TextEditor, TreeView,
+    TreeViewExpansionEvent, TreeViewSelectionChangeEvent, TreeViewVisibilityChangeEvent, Uri, window
 } from "coc.nvim"
 import { Commands } from "../commands"
 import { Jdtls } from "../java/jdtls"
@@ -65,31 +62,19 @@ export class DependencyExplorer implements Disposable {
                     this.reveal(Uri.parse(window.activeTextEditor.document.uri))
                 }
             }),
-            commands.registerCommand(Commands.VIEW_PACKAGE_REVEAL_IN_PROJECT_EXPLORER, async () => {
-                // await commands.executeCommand(Commands.JAVA_PROJECT_EXPLORER_FOCUS);
-                // let fsPath: string = uri.fsPath;
-                // const fileName: string = path.basename(fsPath);
-                // if (/(.*\.gradle)|(.*\.gradle\.kts)|(pom\.xml)$/.test(fileName)) {
-                //     fsPath = path.dirname(fsPath);
-                // }
-                // uri = Uri.file(fsPath);
-                // if ((await fse.stat(fsPath)).isFile()) {
-                //     await commands.executeCommand(Commands.VSCODE_OPEN, uri, {preserveFocus: true});
-                // }
-                // workspace.has
-
-                window.showWarningMessage(`${JSON.stringify(window.activeTextEditor?.document.uri)}`)
-                this.reveal(Uri.parse(window.activeTextEditor?.document?.uri), false)
+            commands.registerCommand(Commands.VIEW_PACKAGE_REVEAL_IN_PROJECT_EXPLORER, () => {
+                if (window.activeTextEditor) {
+                    this.reveal(Uri.parse(window.activeTextEditor.document?.uri), false)
+                }
             }),
-            commands.registerCommand(Commands.JAVA_PROJECT_EXPLORER_SHOW_NONJAVA_RESOURCES, async () => {
+            commands.registerCommand(Commands.JAVA_PROJECT_EXPLORER_SHOW_NONJAVA_RESOURCES, () => {
                 Settings.switchNonJavaResourceFilter(true)
             }),
-            commands.registerCommand(Commands.JAVA_PROJECT_EXPLORER_HIDE_NONJAVA_RESOURCES, async () => {
+            commands.registerCommand(Commands.JAVA_PROJECT_EXPLORER_HIDE_NONJAVA_RESOURCES, () => {
                 Settings.switchNonJavaResourceFilter(false)
             }),
         )
 
-        // register telemetry events
         context.subscriptions.push(
             this._dependencyViewer.onDidChangeSelection((_e: TreeViewSelectionChangeEvent<ExplorerNode>) => {
                 EventCounter.increase("didChangeSelection")
@@ -132,8 +117,18 @@ export class DependencyExplorer implements Disposable {
                 return
             }
 
-            if (!this._dependencyViewer?.visible) {
-                await this._dependencyViewer?.show()
+            if (this._dependencyViewer?.visible) {
+                const winId = this._dependencyViewer.windowId
+                const tabnr = await nvim.call('tabpagenr') as number
+                const buflist = await nvim.call('tabpagebuflist', [tabnr]) as number[]
+                const bufId = await nvim.call('winbufnr', [winId])
+                const found = buflist.find((bufnr) => { return bufId == bufnr })
+                if (!found) {
+                    await nvim.call('coc#window#close', [winId])
+                    await this._dependencyViewer?.show('belowright 40vs')
+                }
+            } else if (!this._dependencyViewer?.visible) {
+                await this._dependencyViewer?.show('belowright 40vs')
             }
             await this._dependencyViewer.reveal(node, { select: true, focus: true, expand: true })
         } finally {
@@ -144,30 +139,4 @@ export class DependencyExplorer implements Disposable {
     public get dataProvider(): DependencyDataProvider {
         return this._dataProvider
     }
-
-    private async promptForProjectNode(): Promise<DataNode | undefined> {
-        const projects = await this._dataProvider.getRootProjects();
-        if (projects.length === 0) {
-            window.showInformationMessage("There is no Java projects in current workspace.");
-            return undefined;
-        } else if (projects.length === 1) {
-            return projects[0] as DataNode;
-        } else {
-            const options: IProjectPickItem[] = projects.map((p: DataNode) => {
-                return {
-                    label: p.name,
-                    node: p,
-                };
-            });
-            const choice: IProjectPickItem | undefined = await window.showQuickPick(options, {
-                title: "Project node",
-                placeholder: "Choose a project",
-            });
-            return choice?.node as DataNode;
-        }
-    }
-}
-
-interface IProjectPickItem extends QuickPickItem {
-    node: ExplorerNode;
 }
