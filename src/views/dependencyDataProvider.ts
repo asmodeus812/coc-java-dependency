@@ -39,28 +39,6 @@ export class DependencyDataProvider implements TreeDataProvider<ExplorerNode> {
             this.refresh(debounce, element)));
         context.subscriptions.push(commands.registerCommand(Commands.VIEW_PACKAGE_REFRESH, (debounce?: boolean, element?: ExplorerNode) =>
             this.refresh(debounce, element)));
-        context.subscriptions.push(commands.registerCommand(Commands.JAVA_PROJECT_BUILD_WORKSPACE, () =>
-            commands.executeCommand(Commands.JAVA_BUILD_WORKSPACE, true /*fullCompile*/)));
-        context.subscriptions.push(commands.registerCommand(Commands.JAVA_PROJECT_CLEAN_WORKSPACE, () =>
-            commands.executeCommand(Commands.JAVA_CLEAN_WORKSPACE)));
-        context.subscriptions.push(commands.registerCommand(Commands.JAVA_PROJECT_UPDATE, async (node: INodeData) => {
-            if (!node.uri) {
-                window.showErrorMessage("The URI of the project is not available, you can try to trigger the command 'Java: Reload Project' from Command Palette.");
-                return;
-            }
-            const pattern: RelativePattern = new RelativePattern(Uri.parse(node.uri).fsPath?.replace(/[\\\/]+$/, ""), "{pom.xml,*.gradle}");
-            const uris: Uri[] = await workspace.findFiles(pattern, null /*exclude*/, 1 /*maxResults*/);
-            if (uris.length >= 1) {
-                commands.executeCommand(Commands.JAVA_PROJECT_CONFIGURATION_UPDATE, uris[0]);
-            }
-        }));
-        context.subscriptions.push(commands.registerCommand(Commands.JAVA_PROJECT_REBUILD, async (node: INodeData) => {
-            if (!node.uri) {
-                window.showErrorMessage("The URI of the project is not available, you can try to trigger the command 'Java: Rebuild Projects' from Command Palette.");
-                return;
-            }
-            commands.executeCommand(Commands.BUILD_PROJECT, Uri.parse(node.uri), true);
-        }));
 
         this.setRefreshDebounceFunc();
     }
