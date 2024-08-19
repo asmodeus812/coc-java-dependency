@@ -1,14 +1,13 @@
 {
     "name": "coc-java-explorer",
     "description": "coc.nvim extension project manager for java",
-    "version": "0.23.8",
+    "version": "0.23.9",
     "author": "asmodeus812",
     "main": "lib/index.js",
     "scripts": {
         "watch": "node esbuild.mjs --watch",
         "build": "node esbuild.mjs",
-        "prepare": "node esbuild.mjs",
-        "build-server": "node scripts/buildJdtlsExt.js"
+        "prepare": "node esbuild.mjs"
     },
     "keywords": [
         "coc.nvim"
@@ -35,8 +34,7 @@
         "workspaceContains:settings.gradle.kts",
         "workspaceContains:*/settings.gradle.kts",
         "workspaceContains:.classpath",
-        "workspaceContains:*/.classpath",
-        "onCommand:_java.project.open"
+        "workspaceContains:*/.classpath"
     ],
     "devDependencies": {
         "@types/fs-extra": "^9.0.13",
@@ -76,33 +74,27 @@
         "commands": [
             {
                 "command": "java.view.package.revealProject",
-                "title": "Reveal project in project view explorer",
-                "category": "Java"
+                "title": "Reveal project in project view explorer"
             },
             {
                 "command": "java.view.package.refresh",
-                "title": "Refresh project & packages in view explorer",
-                "category": "Java"
+                "title": "Refresh project & packages in view explorer"
             },
             {
                 "command": "java.view.package.changeToHierarchicalPackageView",
-                "title": "Show package project view as hierarchical view",
-                "category": "Java"
+                "title": "Show package project view as hierarchical view"
             },
             {
                 "command": "java.view.package.changeToFlatPackageView",
-                "title": "Show package project view as flat view",
-                "category": "Java"
+                "title": "Show package project view as flat view"
             },
             {
                 "command": "java.view.explorer.showNonJavaResources",
-                "title": "Show non-java resources within project view",
-                "category": "Java"
+                "title": "Show non-java resources within project view"
             },
             {
                 "command": "java.view.explorer.hideNonJavaResources",
-                "title": "Hid non-java resources within project view",
-                "category": "Java"
+                "title": "Hid non-java resources within project view"
             }
         ],
         "configuration": {

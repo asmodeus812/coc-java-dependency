@@ -4,7 +4,6 @@ target/
 bin/
 out/
 **/lib
-**/server
 **/*.vsix
 .vscode-test/
 vscode-java-*.vsix
